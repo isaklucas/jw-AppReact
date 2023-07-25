@@ -22,6 +22,11 @@ const S140 = () => {
 
   const [month, setMonth] = useState('');
   const [fileName, setFileName] = useState('');
+  const [url, setUrl] = useState('');
+  
+  
+
+  const [responseText, setResponseText] = useState('');
 
   const handleMonthChange = (event) => {
     setMonth(event.target.value);
@@ -31,19 +36,27 @@ const S140 = () => {
     setFileName(event.target.value);
   };
 
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value);
+  };
+
   const handleSendRequest = () => {
     // Requisição GET com Axios
     console.log('mes: ' + month)
     console.log('nome: ' + fileName)
-    axios.get(`http://seu-servidor-python.com/api/requisicao`, {
+    console.log('url: ' + url)
+    axios.get(`http://localhost:5000/api/reunioes`, {
       params: {
-        mes: month,
-        nome: fileName
+        mesEnV: month,
+        NomeEnV: fileName,
+        urlEnv: url
       }
     })
       .then((response) => {
-        // Lógica para lidar com a resposta do servidor, caso necessário
+        
+
         console.log('Resposta do Servidor:', response.data);
+        setResponseText(JSON.stringify(response.data, null, 2));
       })
       .catch((error) => {
         // Lógica para lidar com erros na requisição
@@ -70,6 +83,13 @@ const S140 = () => {
           value={fileName}
           onChange={handleFileNameChange}
         />
+        <input
+          type="text"
+          className="s140-input"
+          placeholder="Url"
+          value={url}
+          onChange={handleUrlChange}
+        />
         <button className="s140-button" onClick={handleSendRequest}>
           Enviar
         </button>
@@ -77,6 +97,13 @@ const S140 = () => {
       <Link to="/" className="s140-back-link">
         <span className="s140-back-icon">&#8592;</span> Voltar para a Página Inicial
       </Link>
+      <textarea
+        id="resposta"
+        value={responseText}
+        rows={10}
+        cols={50}
+        readOnly
+      />
     </div>
   );
 };
