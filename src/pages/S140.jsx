@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/S140.css'; // Importe o arquivo de estilos CSS externo
 import axios from 'axios'; // Importe o Axios
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Importe o CSS do tema do editor
+
+
 
 
 const S140 = () => {
@@ -103,6 +107,13 @@ const S140 = () => {
       });
   };
 
+  const [content, setContent] = useState('');
+
+  // Função para lidar com as alterações no conteúdo do editor
+  const handleContentChange = (value) => {
+    setContent(value);
+  };
+
   return (
     <div className="s140-container">
       <h1 className="s140-title">S140 Page</h1>
@@ -143,6 +154,9 @@ const S140 = () => {
         cols={50}
         readOnly
       />
+       <div>
+      <ReactQuill value={content} onChange={handleContentChange} />
+    </div>
     </div>
   );
 };
