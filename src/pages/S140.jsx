@@ -4,20 +4,55 @@ import { Link } from 'react-router-dom';
 import '../styles/S140.css'; // Importe o arquivo de estilos CSS externo
 import axios from 'axios'; // Importe o Axios
 
+
 const S140 = () => {
+
+  function getFullWeekOfMonth(month, year) {
+ 
+      var date = new Date(year, month)
+  
+      var day = date.getDay();
+      var diffDays = 0;
+  
+      console.log(day + "ss"+ date )
+
+      while(day !== 0 ){
+        diffDays++;
+        date.setDate(date.getDate() + 1); // Incrementar o dia na data, para verificar o próximo dia.
+        day = date.getDay();
+
+      }
+      console.log("Dias até próximo domingo: " + diffDays
+      + "dia atual" + date);
+
+      const { startOfWeek, startOfYear, differenceInWeeks } = require('date-fns');
+
+      // Encontrar o início da semana e do ano
+      const startOfWeekDate = startOfWeek(date);
+      const startOfYearDate = startOfYear(date);
+
+      // Calcular a diferença em semanas entre o início da semana e o início do ano
+      const weekNumber = differenceInWeeks(startOfWeekDate, startOfYearDate) + 1;
+        
+  
+    return weekNumber;
+  }
+  
+
+
   const months = [
-    { value: '01', label: 'Janeiro' },
-    { value: '02', label: 'Fevereiro' },
-    { value: '03', label: 'Março' },
-    { value: '04', label: 'Abril' },
-    { value: '05', label: 'Maio' },
-    { value: '06', label: 'Junho' },
-    { value: '07', label: 'Julho' },
-    { value: '08', label: 'Agosto' },
-    { value: '09', label: 'Setembro' },
-    { value: '10', label: 'Outubro' },
-    { value: '11', label: 'Novembro' },
-    { value: '12', label: 'Dezembro' },
+    { value: '00', label: 'Janeiro' },
+    { value: '01', label: 'Fevereiro' },
+    { value: '02', label: 'Março' },
+    { value: '03', label: 'Abril' },
+    { value: '04', label: 'Maio' },
+    { value: '05', label: 'Junho' },
+    { value: '06', label: 'Julho' },
+    { value: '07', label: 'Agosto' },
+    { value: '08', label: 'Setembro' },
+    { value: '09', label: 'Outubro' },
+    { value: '10', label: 'Novembro' },
+    { value: '11', label: 'Dezembro' },
   ];
 
   const [month, setMonth] = useState('');
@@ -42,12 +77,16 @@ const S140 = () => {
 
   const handleSendRequest = () => {
     // Requisição GET com Axios
-    console.log('mes: ' + month)
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const semana =  getFullWeekOfMonth(month, currentYear)
+
+    console.log('semana: ' + semana)
     console.log('nome: ' + fileName)
     console.log('url: ' + url)
     axios.get(`http://localhost:5000/api/reunioes`, {
       params: {
-        mesEnV: month,
+        semanaEnV: semana,
         NomeEnV: fileName,
         urlEnv: url
       }
